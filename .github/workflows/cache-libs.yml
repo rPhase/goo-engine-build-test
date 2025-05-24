@@ -10,18 +10,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Set up Python
-        run: choco install python -y
-
-      - name: Install SVN
-        run: choco install svn -y
-
-      - name: Download libraries using make.bat
-        run: cmd /c make.bat update
-
-      - name: Cache win64_vc15 libraries
-        uses: actions/cache@v4
+      - name: Install Python
+        uses: actions/setup-python@v5
         with:
-          path: lib/win64_vc15
-          key: goo-engine-libs-${{ runner.os }}-vc15
+          python-version: '3.11'
+      
+      - name: check python version
+        run: python --version
+      # - name: Install SVN
+        # run: choco install svn -y
+
+      # - name: Download libraries using make.bat
+      #   run: cmd /c make.bat update
+
+      # - name: Cache win64_vc15 libraries
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: lib/win64_vc15
+      #     key: goo-engine-libs-${{ runner.os }}-vc15
