@@ -4,35 +4,25 @@ on:
   workflow_dispatch:
 
 jobs:
-  setup-libs:
+  cache-libs:
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: cmd
 
     steps:
-      - name: Checkout Repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Restore win64_vc15 Cache
-        uses: actions/cache@v4
-        id: cache
+      - name: Create lib directory
+        run: mkdir lib
+
+      - name: Download win64_vc15 via SVN
+        run: |
+          svn checkout https://svn.blender.org/svnroot/bf-blender/trunk/lib/win64_vc15 lib/win64_vc15
+
+      - name: Save win64_vc15 cache
+        uses: actions/cache/save@v4
         with:
-          path: ../lib/win64_vc15
+          path: lib/win64_vc15
           key: win64-vc15-cache
-
-      - name: Install SVN
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: choco install svn -y
-
-      - name: Checkout Blender Libraries
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir ..\lib
-          cd ..\lib
-          svn checkout https://svn.blender.org/svnroot/bf-blender/trunk/lib/win64_vc15
-
-      - name: Confirm Python Exists
-        run: |
-          if exist ../lib/win64_vc15/python/310/bin/python.exe (
-            echo Python found
-          ) else (
-            echo Python NOT found && exit 1
-          )
