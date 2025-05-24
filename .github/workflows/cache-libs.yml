@@ -1,0 +1,29 @@
+name: Cache win64_vc15
+
+on:
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  cache-libs:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install SVN
+        run: choco install svn -y
+
+      - name: Download libraries using make.bat
+        run: cmd /c make.bat update
+
+      - name: Cache win64_vc15 libraries
+        uses: actions/cache@v4
+        with:
+          path: lib/win64_vc15
+          key: goo-engine-libs-${{ runner.os }}-vc15
