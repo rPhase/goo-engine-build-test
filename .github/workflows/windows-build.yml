@@ -1,0 +1,32 @@
+name: Manual Windows Build
+
+on:
+  workflow_dispatch:  # Allows manual triggering via the Actions tab
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update submodules and Blender libs
+        run: |
+          git submodule update --init --recursive
+          make update
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install requests
+
+      - name: Build Goo Engine
+        run: |
+          make release -j2
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: goo-engine-windows
+          path: build_windows_x64_full/bin/Release/
