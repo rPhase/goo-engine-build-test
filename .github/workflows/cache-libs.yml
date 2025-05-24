@@ -27,12 +27,12 @@ jobs:
         $success = $false
         for ($i = 1; $i -le $retries; $i++) {
           try {
-            Write-Host "Attempt $i: Checking out win64_vc15 libs..."
+            Write-Host "Attempt ${i}: Checking out win64_vc15 libs..."
             svn checkout https://svn.blender.org/svnroot/bf-blender/trunk/lib/win64_vc15 lib/win64_vc15 --non-interactive --trust-server-cert
             $success = $true
             break
           } catch {
-            Write-Host "Attempt $i failed: $($_.Exception.Message)"
+            Write-Host "Attempt ${i} failed: $($_.Exception.Message)"
             Start-Sleep -Seconds 30
           }
         }
