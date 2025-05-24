@@ -11,14 +11,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show current working directory
-        run: |
-          pwd
-          dir
-
       - name: Update Blender libraries and dependencies
         run: |
-          make update
+          cmd /c make.bat update
 
       - name: Install Python dependencies
         run: |
@@ -27,7 +22,7 @@ jobs:
 
       - name: Build Goo Engine (Release)
         run: |
-          make release -j2
+          cmd /c make.bat release -j2
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
