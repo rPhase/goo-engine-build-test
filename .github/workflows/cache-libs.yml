@@ -13,36 +13,19 @@ jobs:
         mkdir -p lib
         mkdir -p lib/win64_vc15
 
-    - name: Restore cached win64_vc15
-      uses: actions/cache@v4
-      id: cache-win64
-      with:
-        path: lib/win64_vc15
-        key: win64-vc15-static
-
-    - name: Retry SVN checkout up to 5 times
-      shell: pwsh
+    - name: Download win64_vc15 archive
       run: |
-        $retries = 5
-        $success = $false
-        for ($i = 1; $i -le $retries; $i++) {
-          try {
-            Write-Host "Attempt ${i}: Checking out win64_vc15 libs..."
-            svn checkout https://svn.blender.org/svnroot/bf-blender/trunk/lib/win64_vc15 lib/win64_vc15 --non-interactive --trust-server-cert
-            $success = $true
-            break
-          } catch {
-            Write-Host "Attempt ${i} failed: $($_.Exception.Message)"
-            Start-Sleep -Seconds 30
-          }
-        }
-        if (-not $success) {
-          Write-Host "Failed to checkout after $retries attempts. Continuing so cache can be saved."
-        }
+        curl -L -o win64_vc15.7z https://github.com/rPhase/blender-lib-win64_vc15/releases/download/v0.0.1/win64_vc15.7z
 
-    - name: Save partial win64_vc15 cache
-      if: always()
-      uses: actions/cache/save@v4
+    - name: Extract archive
+      shell: powershell
+      run: |
+        Expand-Archive -Path win64_vc15.7z -DestinationPath lib\win64_vc15
+
+    - name: Cache win64_vc15 libs
+      uses: actions/cache@v3
       with:
         path: lib/win64_vc15
-        key: win64-vc15-static
+        key: win64-vc15-cache
+        restore-keys: |
+          win64-vc15-cache
