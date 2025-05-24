@@ -15,7 +15,7 @@ jobs:
 
       - name: Update Blender libraries and dependencies
         run: |
-          cmd /c make.bat update --force
+          cmd /c make.bat update
 
       - name: Install Python dependencies
         run: |
