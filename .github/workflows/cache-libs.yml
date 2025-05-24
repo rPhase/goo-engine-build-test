@@ -17,9 +17,24 @@ jobs:
       - name: Create lib directory
         run: mkdir lib
 
-      - name: Download win64_vc15 via SVN
+      - name: SVN Checkout - Retry up to 5 times if fail
         run: |
+          @echo off
+          set RETRIES=5
+          set COUNT=0
+          :RETRY
           svn checkout https://svn.blender.org/svnroot/bf-blender/trunk/lib/win64_vc15 lib/win64_vc15
+          if %ERRORLEVEL% NEQ 0 (
+            set /a COUNT+=1
+            if %COUNT% LSS %RETRIES% (
+              echo Retry %COUNT%/%RETRIES% after delay...
+              timeout /t 30
+              goto RETRY
+            ) else (
+              echo Failed after %RETRIES% attempts
+              exit /b 1
+            )
+          )
 
       - name: Save win64_vc15 cache
         uses: actions/cache/save@v4
