@@ -1,30 +1,38 @@
 name: Cache win64_vc15
 
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
 
 jobs:
-  cache-libs:
+  setup-libs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repo
         uses: actions/checkout@v4
-      - name: Install Python
-        uses: actions/setup-python@v5
+
+      - name: Restore win64_vc15 Cache
+        uses: actions/cache@v4
+        id: cache
         with:
-          python-version: '3.11'
-      
-      - name: check python version
-        run: python --version
-      # - name: Install SVN
-        # run: choco install svn -y
+          path: ../lib/win64_vc15
+          key: win64-vc15-cache
 
-      # - name: Download libraries using make.bat
-      #   run: cmd /c make.bat update
+      - name: Install SVN
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: choco install svn -y
 
-      # - name: Cache win64_vc15 libraries
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: lib/win64_vc15
-      #     key: goo-engine-libs-${{ runner.os }}-vc15
+      - name: Checkout Blender Libraries
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir ..\lib
+          cd ..\lib
+          svn checkout https://svn.blender.org/svnroot/bf-blender/trunk/lib/win64_vc15
+
+      - name: Confirm Python Exists
+        run: |
+          if exist ../lib/win64_vc15/python/310/bin/python.exe (
+            echo Python found
+          ) else (
+            echo Python NOT found && exit 1
+          )
