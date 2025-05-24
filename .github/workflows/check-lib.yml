@@ -1,0 +1,35 @@
+name: Check cache libs
+
+on:
+  workflow_dispatch:  # manual trigger
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Restore cache for win64_vc15 libs
+      id: cache-win64
+      uses: actions/cache@v3
+      with:
+        path: lib/win64_vc15
+        key: win64-vc15-cache
+        restore-keys: |
+          win64-vc15-cache
+
+    - name: Download and extract libs if cache miss
+      if: steps.cache-win64.outputs.cache-hit != 'true'
+      run: |
+        curl -L -o win64_vc15.7z https://github.com/rPhase/blender-lib-win64_vc15/releases/download/v0.0.1/win64_vc15.7z
+        7z x win64_vc15.7z -olib\win64_vc15 -y
+
+    - name: Check the folders
+      run: |
+        ls -Name
+        cd lib
+        ls -Name
+        cd win64_vc15
+        ls -Name
