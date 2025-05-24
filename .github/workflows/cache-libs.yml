@@ -16,11 +16,9 @@ jobs:
     - name: Download win64_vc15 archive
       run: |
         curl -L -o win64_vc15.7z https://github.com/rPhase/blender-lib-win64_vc15/releases/download/v0.0.1/win64_vc15.7z
-
-    - name: Extract archive
-      shell: powershell
-      run: |
-        Expand-Archive -Path win64_vc15.7z -DestinationPath lib\win64_vc15
+    
+    - name: Extract 7z archive
+      run: 7z x win64_vc15.7z -olib\win64_vc15 -y
 
     - name: Cache win64_vc15 libs
       uses: actions/cache@v3
