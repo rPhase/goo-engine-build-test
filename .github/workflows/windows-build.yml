@@ -11,6 +11,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Disable autocrlf
+        run: git config core.autocrlf false
+
       - name: Update Blender libraries and dependencies
         run: |
           make update
