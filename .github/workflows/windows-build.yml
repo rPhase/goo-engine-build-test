@@ -11,8 +11,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Disable autocrlf
-        run: git config core.autocrlf false
+      - name: Show current working directory
+        run: pwd
 
       - name: Update Blender libraries and dependencies
         run: |
