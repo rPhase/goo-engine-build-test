@@ -10,10 +10,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Update Blender libraries and dependencies
         run: |
-          cmd /c make.bat update
+          cmd /c make.bat update --force
 
       - name: Install Python dependencies
         run: |
