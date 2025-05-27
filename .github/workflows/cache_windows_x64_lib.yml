@@ -10,18 +10,19 @@ jobs:
     steps:
     - name: Set up directory structure
       run: |
-        mkdir -p lib
-    - name: Download win64_vc15 archive
+        mkdir -p goo-engine-git\goo-engine
+    
+    - name: Download windows_x64 archive
       run: |
         curl -L -o windows_x64.7z https://github.com/rPhase/blender-lib-windows_x64/releases/download/v0.0.2/windows_x64.7z
     
     - name: Extract 7z archive
-      run: 7z x windows_x64.7z -olib -y
+      run: 7z x windows_x64.7z -ogoo-engine-git/goo-engine/lib -y
 
-    - name: Cache win64_vc15 libs
+    - name: Cache windows_x64 libs
       uses: actions/cache@v4
       with:
-        path: lib/windows_x64
+        path: goo-engine-git/goo-engine/lib/windows_x64
         key: windows_x64-cache
         restore-keys: |
           windows_x64-cache
