@@ -34,11 +34,15 @@ jobs:
         curl -L -o windows_x64.7z https://github.com/rPhase/blender-lib-windows_x64/releases/download/v0.0.2/windows_x64.7z
         7z x windows_x64.7z -olib -y
 
-        
-    - name: Try update
+    - name: Check Directory
       shell: cmd
-      working-directory: ./goo-engine-git/goo-engine
-      run: make.bat update
+      working-directory: ./goo-engine-git/goo-engine/lib/windows_x64
+      run: dir /b
+        
+    # - name: Try update
+    #   shell: cmd
+    #   working-directory: ./goo-engine-git/goo-engine
+    #   run: make.bat update
     
     - name: Build Goo Engine (Release)
       shell: cmd
