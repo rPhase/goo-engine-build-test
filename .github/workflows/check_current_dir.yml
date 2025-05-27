@@ -1,0 +1,27 @@
+name: Check Directory
+
+on:
+  workflow_dispatch:  # manual trigger
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+      with:
+        path: goo-engine-git\goo-engine
+
+    - name: Print current directory and list contents
+      shell: cmd
+      run: |
+        cd
+        dir /b
+
+    - name: Change Directory
+      shell: cmd
+      run: |
+        cd goo-engine-git\goo-engine
+        cd
+        dir /b
