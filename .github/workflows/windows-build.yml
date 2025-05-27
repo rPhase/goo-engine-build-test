@@ -13,42 +13,40 @@ jobs:
       with:
         path: goo-engine-git\goo-engine
 
-    - name: Change Directory
+    - name: Check Directory
       shell: cmd
-      run: |
-        cd goo-engine-git\goo-engine
+      working-directory: ./goo-engine-git/goo-engine
+      run: dir /b
 
     - name: Restore cache for windows_x64 libs
       id: cache-win64
       uses: actions/cache@v4
       with:
-        path: lib/windows_x64
+        path: goo-engine-git/goo-engine/lib/windows_x64
         key: windows_x64-cache
         restore-keys: |
           windows_x64-cache
           
     - name: Download and extract libs if cache miss
       if: steps.cache-win64.outputs.cache-hit != 'true'
+      working-directory: ./goo-engine-git/goo-engine
       run: |
         curl -L -o windows_x64.7z https://github.com/rPhase/blender-lib-windows_x64/releases/download/v0.0.2/windows_x64.7z
         run: 7z x windows_x64.7z -olib -y
 
-    - name: Print current directory and list contents
-      shell: cmd
-      run: |
-        cd
-        dir /b
         
     - name: Try update
       shell: cmd
+      working-directory: ./goo-engine-git/goo-engine
       run: make.bat update
     
     - name: Build Goo Engine (Release)
       shell: cmd
+      working-directory: ./goo-engine-git/goo-engine
       run: make.bat
 
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
       with:
         name: goo-engine-windows_x64
-        path: build_windows_x64_vc17_Release/bin/Release/
+        path: goo-engine-git/build_windows_x64_vc17_Release/bin/Release/
