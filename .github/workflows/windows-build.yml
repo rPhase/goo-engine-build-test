@@ -32,14 +32,20 @@ jobs:
       run: |
         curl -L -o windows_x64.7z https://github.com/rPhase/blender-lib-windows_x64/releases/download/v0.0.2/windows_x64.7z
         run: 7z x windows_x64.7z -olib -y
+
+    - name: Print current directory and list contents
+      shell: cmd
+      run: |
+        cd
+        dir /b
         
     - name: Try update
       shell: cmd
-      run: make update
+      run: make.bat update
     
     - name: Build Goo Engine (Release)
       shell: cmd
-      run: make
+      run: make.bat
 
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
