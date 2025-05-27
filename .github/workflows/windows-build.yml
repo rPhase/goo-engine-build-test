@@ -35,11 +35,11 @@ jobs:
         
     - name: Try update
       shell: cmd
-      run: make.bat update
+      run: make update
     
     - name: Build Goo Engine (Release)
       shell: cmd
-      run: make.bat
+      run: make
 
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
